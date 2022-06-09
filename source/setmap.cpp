@@ -50,59 +50,8 @@ int main()
 	}
 	
 	//channels
-	//1.define
-	/*
-	int channel[5];
-	for(int i=0;i<5;i++)
-		channel[i] = -1;
-	int point = 0;
-	while(true)
-	{
-		int see = 1;
-		bool flag = true;
-		while(flag)
-		{
-			channel[point] = rand() % 5;
-			if(point == channel[point])
-				continue;
-			if(point != channel[point])
-				flag = false;
-			if(channel[channel[point]] == -1)
-				flag = false;
-			else
-			{
-				bool b = true;
-				for(int i=0;i<5;i++)
-				{
-					if(channel[i] == -1)
-					{
-						b = false;
-						break;
-					}
-				}
-				if(b)
-				{
-					channel[point] = 0;
-					see = 2;
-					break;
-				}
-				else
-				{
-					see = 0;
-					continue;
-				}
-			}
-		}
-		if(see == 1)
-			point = channel[point];
-		if(see == 2)
-			break;
-		see = 1;
-	}
-	*/
-	//2.change
 	//for(int i=0;i<5;i++)
-	//cout<<i<<' '<<channel[i]<<endl;
+	//	cout<<i<<' '<<channel[i]<<endl;
 	for(int i=0;i<4;i++)
 	{
 		//cout<<i<<endl;
@@ -132,48 +81,37 @@ int main()
 	}
 	
 	//prop
+	int coin = 0,heart = 0,monster = 0;
+	int space = 0;
 	for(int i=0;i<25;i++)
 	{
 		for(int j=0;j<80;j++)
 		{
-			int temp = rand() % 50;
+			int temp = rand() % 45;
 			if(map[i][j] == ' ')
 			{
-				if(temp == 1 || temp == 2)
-					map[i][j] = 'C';
-				else if(temp == 3)
-					map[i][j] = 'H';
-				else if(temp == 4 || temp == 5)
-					map[i][j] = 'M';
-			}
-		}
-	}
-	
-	//exit
-	bool f = true;
-	int x1,y1,x2,y2;
-	x1 = room[4][0];
-	y1 = room[4][1];
-	x2 = room[4][2];
-	y2 = room[4][3];
-	for(int i=x1;i<=x2;i++)
-	{
-		if(f)
-		{
-			for(int j=y1;j<=y2;j++)
-			{
-				int temp = rand() % 10;
-				if(temp == 0)
+				space++;
+				if((temp == 1 || temp == 2) && coin < 30)
 				{
-					map[j][i] = 'O';
-					f = false;
-					break;
-				 } 
+					map[i][j] = 'C';
+					coin++;
+				}
+				else if(temp == 3 && heart < 10)
+				{
+					map[i][j] = 'H';
+					heart++;
+				}
+				else if((temp == 4 || temp == 5) && monster < 20)
+				{
+					map[i][j] = 'M';
+					monster++;
+				}
 			}
 		}
-		else
-			break;
 	}
+	//cout<<"spaces:"<<space<<" coins:"<<coin<<" hearts:"<<heart<<" monsters:"<<monster<<endl;
+	//exit
+	map[room[4][1]+2][room[4][0]+7] = 'O';
 	map[12][40] = ' ';
 	
 	//write map
