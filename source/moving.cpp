@@ -6,9 +6,9 @@
 using namespace std;
 int main()
 {
-	string map[25],imap[25];			//map:game map;imap:background map
-	int coin = 0,level = 1,lives = 5;				//if you do not understand that,you can not understand that
-	int x,y;							//init the position
+	string map[25],imap[25],pmap[25];		//map:game map;imap:background map;pmap:front map
+	int coin = 0,kill = 0,level = 1,lives = 5;		//if you do not understand that,you can not understand that
+	int x,y;								//init the position
 	while(true)
 	{
 		bool bool1 = false;
@@ -18,12 +18,32 @@ int main()
 		for(int i=0;i<25;i++)				//this loop read the map file
 		{
 			getline(fin,map[i]);			//put a line in the array:map
-			imap[i] = map[i];				//put a line in the array:imap
-			cout<<map[i]<<endl;				//help programmers to check the map
+			pmap[i] = imap[i] = map[i];		//put a line in the arrays:imap,pmap
+			//cout<<map[i]<<endl;				//help programmers to check the map
 		}
+		for(int i=0;i<25;i++)
+		{
+			for(int j=0;j<80;j++)
+			{
+				if(pmap[i][j] != '*')
+					pmap[i][j] = '.';
+			}
+		}	
+		//for(int i=0;i<25;i++)
+		//	cout<<pmap[i]<<endl;
+		system("cls");
+		cout<<"Load successful!"<<endl<<"Press any key to enter the game.";
 		while(true)
 		{
 			map[y][x] = imap[y][x];			//clear the place before moving
+			for(int i=y-1;i<=y+1;i++)
+			{
+				for(int j=x-1;j<=x+1;j++)
+				{
+					if(pmap[i][j] != '*')
+						pmap[i][j] = '.';
+				}
+			}
 			int tempx = x,tempy = y;		//member the place
 			switch(getch())					//control the player
 			{								//move
@@ -52,6 +72,7 @@ int main()
 								continue;
 							if(map[i][j] == 'M')
 							{
+								kill++;
 								map[i][j] = imap[i][j] = ' ';
 							}
 						}
@@ -102,7 +123,14 @@ int main()
 				}
 			}
 			map[y][x] = 'X';				//change the game map after moving
-			
+			for(int i=y-1;i<=y+1;i++)
+			{
+				for(int j=x-1;j<=x+1;j++)
+				{
+					if(pmap[i][j] == '.')
+						pmap[i][j] = map[i][j];
+				}
+			}
 			system("cls");					//if you can not understand that,you will never understand that
 			if(lives <= 0)					//die
 			{
@@ -111,9 +139,12 @@ int main()
 				return 0;
 			}
 											//print status
-			cout<<"x:"<<x<<" y:"<<y<<" coin:"<<coin<<" lives:"<<lives<<" level:"<<level<<endl;
+			cout<<"x:"<<x<<" y:"<<y<<" coin:"<<coin<<" kill:"<<kill<<" lives:"<<lives<<" level:"<<level<<endl;
 			for(int i=0;i<25;i++)			//print the map
-				cout<<map[i]<<endl;
+				cout<<pmap[i]<<endl;
+			//cout<<endl;
+			//for(int i=0;i<25;i++)			//print the map
+			//	cout<<map[i]<<endl;
 		}
 		if(bool1)
 		{

@@ -51,6 +51,7 @@ int main()
 	
 	//channels
 	//1.define
+	/*
 	int channel[5];
 	for(int i=0;i<5;i++)
 		channel[i] = -1;
@@ -98,16 +99,14 @@ int main()
 			break;
 		see = 1;
 	}
-	
+	*/
 	//2.change
-	for(int i=0;i<5;i++)
+	//for(int i=0;i<5;i++)
 	//cout<<i<<' '<<channel[i]<<endl;
-	for(int i=0;i<5;i++)
+	for(int i=0;i<4;i++)
 	{
 		//cout<<i<<endl;
-		int a = channel[i];
-		if(a == 0)
-			continue;
+		int a = i+1;
 		//x
 		if(room[i][0] <= room[a][0])
 		{
@@ -153,16 +152,10 @@ int main()
 	//exit
 	bool f = true;
 	int x1,y1,x2,y2;
-	for(int i=0;i<5;i++)
-	{
-		if(channel[i] == 0)
-		{
-			x1 = room[i][0];
-			y1 = room[i][1];
-			x2 = room[i][2];
-			y2 = room[i][3];
-		}
-	}
+	x1 = room[4][0];
+	y1 = room[4][1];
+	x2 = room[4][2];
+	y2 = room[4][3];
 	for(int i=x1;i<=x2;i++)
 	{
 		if(f)
