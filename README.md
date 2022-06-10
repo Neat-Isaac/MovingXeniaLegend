@@ -9,7 +9,7 @@ Kill Monsters:<kbd>K</kbd>;
 
 Symbol:
 
-X:Xenia(Yourself);
+@:Xenia(Yourself);
 
 M:Monster(You need to kill them);
 

@@ -3,12 +3,16 @@
 #include <conio.h>						//get the keyboard value
 #include <fstream>						//read the map file
 #include <cmath>						//abs() function
+#include <ctime>
 using namespace std;
+
+const int xview = 2,yview = 1;
 int main()
 {
-	string map[25],imap[25],pmap[25];		//map:game map;imap:background map;pmap:front map
+	string map[25],imap[25],pmap[25];				//map:game map;imap:background map;pmap:front map
 	int coin = 0,kill = 0,level = 1,lives = 5;		//if you do not understand that,you can not understand that
-	int x,y;								//init the position
+	int x,y;										//init the position
+	srand(time(NULL));
 	while(true)
 	{
 		bool bool1 = false;
@@ -36,9 +40,9 @@ int main()
 		while(true)
 		{
 			map[y][x] = imap[y][x];			//clear the place before moving
-			for(int i=y-1;i<=y+1;i++)
+			for(int i=y-yview;i<=y+yview;i++)
 			{
-				for(int j=x-1;j<=x+1;j++)
+				for(int j=x-xview;j<=x+xview;j++)
 				{
 					if(pmap[i][j] != '*')
 						pmap[i][j] = '.';
@@ -85,7 +89,7 @@ int main()
 					cout<<"Move:W,A,S,D;"<<endl;
 					cout<<"Kill Monsters:K;"<<endl;
 					cout<<"Symbol:"<<endl;
-					cout<<"X:Xenia(Yourself);"<<endl;
+					cout<<"@:Xenia(Yourself);"<<endl;
 					cout<<"M:Monster(You need to kill them);"<<endl;
 					cout<<"C:Coin(Collect them to increase your coins);"<<endl;
 					cout<<"H:Heart(Collect them to ncrease your lives);"<<endl;
@@ -122,10 +126,66 @@ int main()
 					y = tempy;
 				}
 			}
-			map[y][x] = 'X';				//change the game map after moving
-			for(int i=y-1;i<=y+1;i++)
+			map[y][x] = '@';				//change the game map after moving
+			
+			//monsters' move
+			for(int i=0;i<25;i++)
 			{
-				for(int j=x-1;j<=x+1;j++)
+				for(int j=0;j<80;j++)
+				{
+					if(map[i][j] == 'M')
+					{
+						int temp = rand() % 10;
+						switch(temp)
+						{
+							case 0:
+								if(map[i+1][j] != '*' && map[i+1][j] != '@')
+								{
+									if(imap[i][j] == 'M')
+										map[i][j] = ' ';
+									else
+										map[i][j] = imap[i][j];
+									map[i+1][j] = 'M';
+									break;
+								}
+							case 1:
+								if(map[i-1][j] != '*' && map[i-1][j] != '@')
+								{
+									if(imap[i][j] == 'M')
+										map[i][j] = ' ';
+									else
+										map[i][j] = imap[i][j];
+									map[i-1][j] = 'M';
+									break;
+								}
+							case 2:
+								if(map[i][j+1] != '*' && map[i][j+1] != '@')
+								{
+									if(imap[i][j] == 'M')
+										map[i][j] = ' ';
+									else
+										map[i][j] = imap[i][j];
+									map[i][j+1] = 'M';
+									break;
+								}
+							case 3:
+								if(map[i][j-1] != '*' && map[i][j-1] != '@')
+								{
+									if(imap[i][j] == 'M')
+										map[i][j] = ' ';
+									else
+										map[i][j] = imap[i][j];
+									map[i][j-1] = 'M';
+									break;
+								}
+						}
+					}
+				}
+			}
+			
+			for(int i=y-yview;i<=y+yview;i++)
+			{
+				for(int j=x-xview;j<=x+xview;j++)
 				{
 					if(pmap[i][j] == '.')
 						pmap[i][j] = map[i][j];
@@ -141,7 +201,7 @@ int main()
 											//print status
 			cout<<"x:"<<x<<" y:"<<y<<" coin:"<<coin<<" kill:"<<kill<<" lives:"<<lives<<" level:"<<level<<endl;
 			for(int i=0;i<25;i++)			//print the map
-				cout<<pmap[i]<<endl;
+				cout<<map[i]<<endl;
 			//cout<<endl;
 			//for(int i=0;i<25;i++)			//print the map
 			//	cout<<map[i]<<endl;
