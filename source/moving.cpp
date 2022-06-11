@@ -253,12 +253,14 @@ int main()
 			{
 				cout<<"You died at level "<<level<<'.'<<endl;
 				getch();
+				cout<<"You finally realize that you can never get out of here."<<endl;
+				getch();
 				return 0;
 			}
 											//print status
 			cout<<"x:"<<x<<"\ty:"<<y<<"\tcoin:"<<coin<<"\tkill:"<<kill<<"\tlives:"<<lives<<"\tlevel:"<<level<<"\tmonster's lives:"<<mlives<<endl;
 			for(int i=0;i<25;i++)			//print the map
-				cout<<map[i]<<endl;
+				cout<<pmap[i]<<endl;
 		}
 		level++;							//(start this up a second time)
 	}

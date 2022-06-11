@@ -4,7 +4,19 @@
 using namespace std;
 int main()
 {
-	cout<<"=========Welcome to MovingXenia Legend========="<<endl;
+	system("cls");
+	cout<<"=========Welcome to Tauren Legend========="<<endl;
+	getch();
+	cout<<"You are a tauren hero in the Bedium Kingdom,Apisimisoya."<<endl;
+	getch();
+	cout<<"Your country was destroyed by the Sears Kingdom."<<endl;
+	getch();
+	cout<<"You want to revenge,but you have a big problem--You fell into a deep,deep hole."<<endl;
+	getch();
+	cout<<"When you stand up from the ground,you find yourself in a dungeon."<<endl;
+	getch();
+	cout<<"Get out of here!"<<endl;
+	getch();
 	cout<<"Press any key to start the game."<<endl;
 	getch();
 	system("@Moving");
