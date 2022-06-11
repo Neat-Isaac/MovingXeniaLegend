@@ -7,6 +7,8 @@ Move:<kbd>W</kbd>,<kbd>A</kbd>,<kbd>S</kbd>,<kbd>D</kbd>;
 
 Kill Monsters:<kbd>K</kbd>;
 
+Shop:<kbd>T</kbd>;
+
 Symbol:
 
 @:Xenia(Yourself);

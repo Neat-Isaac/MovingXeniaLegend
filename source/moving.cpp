@@ -7,15 +7,18 @@
 using namespace std;
 
 const int xview = 2,yview = 1;
+int mpos[25][80];
+
 int main()
 {
 	string map[25],imap[25],pmap[25];				//map:game map;imap:background map;pmap:front map
 	int coin = 0,kill = 0,level = 1,lives = 5;		//if you do not understand that,you can not understand that
 	int x,y;										//init the position
 	srand(time(NULL));
+	
 	while(true)
 	{
-		bool bool1 = false;
+		int mlives = -1;;
 		x = 40;y = 12;
 		system("setmap");
 		ifstream fin("map1.txt");			//file pointer
@@ -23,7 +26,7 @@ int main()
 		{
 			getline(fin,map[i]);			//put a line in the array:map
 			pmap[i] = imap[i] = map[i];		//put a line in the arrays:imap,pmap
-			//cout<<map[i]<<endl;				//help programmers to check the map
+			//cout<<map[i]<<endl;			//help us check the map
 		}
 		for(int i=0;i<25;i++)
 		{
@@ -35,11 +38,22 @@ int main()
 		}	
 		//for(int i=0;i<25;i++)
 		//	cout<<pmap[i]<<endl;
+		int posc = 0;
+		for(int i=0;i<25;i++)
+		{
+			for(int j=0;j<80;j++)
+			{
+				if(map[i][j] == 'M')
+					mpos[i][j] = 5;
+			}
+		}
 		system("cls");
 		cout<<"Load successful!"<<endl<<"Press any key to enter the game.";
+		
 		while(true)
 		{
 			map[y][x] = imap[y][x];			//clear the place before moving
+			int tempx = x,tempy = y;		//memorize the place
 			for(int i=y-yview;i<=y+yview;i++)
 			{
 				for(int j=x-xview;j<=x+xview;j++)
@@ -48,7 +62,6 @@ int main()
 						pmap[i][j] = '.';
 				}
 			}
-			int tempx = x,tempy = y;		//member the place
 			switch(getch())					//control the player
 			{								//move
 				case 'w':
@@ -76,8 +89,13 @@ int main()
 								continue;
 							if(map[i][j] == 'M')
 							{
-								kill++;
-								map[i][j] = imap[i][j] = ' ';
+								mpos[i][j]--;
+								mlives = mpos[i][j];
+								if(mpos[i][j] == 0)
+								{
+									map[i][j] = ' ';
+									kill++;
+								}
 							}
 						}
 					}
@@ -88,6 +106,7 @@ int main()
 					cout<<"Control:"<<endl;
 					cout<<"Move:W,A,S,D;"<<endl;
 					cout<<"Kill Monsters:K;"<<endl;
+					cout<<"Shop:T"<<endl;
 					cout<<"Symbol:"<<endl;
 					cout<<"@:Xenia(Yourself);"<<endl;
 					cout<<"M:Monster(You need to kill them);"<<endl;
@@ -97,7 +116,22 @@ int main()
 					cout<<"======================================="<<endl<<endl<<endl;
 					system("pause");
 					break;
+				case 't':
+					system("cls");
+					cout<<"===============Shop Menu==============="<<endl;
+					cout<<"Press number keys to shop."<<endl;
+					cout<<"1 Heart\t3 coins"<<endl;
+					/*add other things here*/
+					char c = getch();
+					switch(c)
+					{
+						case '1':
+							coin -= 3;
+							lives++;
+							break;
+					}
 			}
+			
 			if(map[y][x] != ' ')
 			{
 				if(map[y][x] == 'C')		//collect coins
@@ -113,12 +147,11 @@ int main()
 				else if(map[y][x] == 'O')	//win the game
 				{
 					system("cls");
-					cout<<"You Win."<<endl;
-					system("pause");
-					bool1 = true;
+					cout<<"You win."<<endl;
+					cout<<"Press any key to enter the next level."<<endl;
+					getch();
 					break;
 				}
-											//open the door(not developed)
 				else{
 					if(map[y][x] == 'M')	//meet the monster
 						lives--;
@@ -126,7 +159,23 @@ int main()
 					y = tempy;
 				}
 			}
+			
 			map[y][x] = '@';				//change the game map after moving
+			
+			for(int i=0;i<25;i++)
+			{
+				for(int j=0;j<80;j++)
+				{
+					if(map[i][j] == 'M')
+					{
+						if(mpos[i][j] <= 0)
+						{
+							mpos[i][j] = 0;
+							map[i][j] = ' ';
+						}
+					}
+				}
+			}
 			
 			//monsters' move
 			for(int i=0;i<25;i++)
@@ -139,8 +188,10 @@ int main()
 						switch(temp)
 						{
 							case 0:
-								if(map[i+1][j] != '*' && map[i+1][j] != '@')
+								if(map[i+1][j] != '*' && map[i+1][j] != '@' && map[i+1][j] != 'M')
 								{
+									mpos[i+1][j] = mpos[i][j];
+									mpos[i][j] = 0;
 									if(imap[i][j] == 'M')
 										map[i][j] = ' ';
 									else
@@ -149,8 +200,10 @@ int main()
 									break;
 								}
 							case 1:
-								if(map[i-1][j] != '*' && map[i-1][j] != '@')
+								if(map[i-1][j] != '*' && map[i-1][j] != '@' && map[i-1][j] != 'M')
 								{
+									mpos[i-1][j] = mpos[i][j];
+									mpos[i][j] = 0;
 									if(imap[i][j] == 'M')
 										map[i][j] = ' ';
 									else
@@ -159,8 +212,10 @@ int main()
 									break;
 								}
 							case 2:
-								if(map[i][j+1] != '*' && map[i][j+1] != '@')
+								if(map[i][j+1] != '*' && map[i][j+1] != '@' && map[i][j+1] != 'M')
 								{
+									mpos[i][j+1] = mpos[i][j];
+									mpos[i][j] = 0;
 									if(imap[i][j] == 'M')
 										map[i][j] = ' ';
 									else
@@ -169,8 +224,10 @@ int main()
 									break;
 								}
 							case 3:
-								if(map[i][j-1] != '*' && map[i][j-1] != '@')
+								if(map[i][j-1] != '*' && map[i][j-1] != '@' && map[i][j-1] != 'M')
 								{
+									mpos[i][j-1] = mpos[i][j];
+									mpos[i][j] = 0;
 									if(imap[i][j] == 'M')
 										map[i][j] = ' ';
 									else
@@ -194,24 +251,15 @@ int main()
 			system("cls");					//if you can not understand that,you will never understand that
 			if(lives <= 0)					//die
 			{
-				cout<<"You Died."<<endl;
-				system("pause");
+				cout<<"You died at level "<<level<<'.'<<endl;
+				getch();
 				return 0;
 			}
 											//print status
-			cout<<"x:"<<x<<" y:"<<y<<" coin:"<<coin<<" kill:"<<kill<<" lives:"<<lives<<" level:"<<level<<endl;
+			cout<<"x:"<<x<<"\ty:"<<y<<"\tcoin:"<<coin<<"\tkill:"<<kill<<"\tlives:"<<lives<<"\tlevel:"<<level<<"\tmonster's lives:"<<mlives<<endl;
 			for(int i=0;i<25;i++)			//print the map
 				cout<<map[i]<<endl;
-			//cout<<endl;
-			//for(int i=0;i<25;i++)			//print the map
-			//	cout<<map[i]<<endl;
 		}
-		if(bool1)
-		{
-			bool1 = 0;
-			level++;
-			continue;
-		}
+		level++;							//(start this up a second time)
 	}
-	return 0;							//I do not know why I put it here
 }
