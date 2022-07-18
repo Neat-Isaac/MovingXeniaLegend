@@ -114,7 +114,7 @@ int main()
 					cout<<"H:Heart(Collect them to ncrease your lives);"<<endl;
 					cout<<"O:Out(The end of the level);"<<endl;
 					cout<<"======================================="<<endl<<endl<<endl;
-					system("pause");
+					getch();
 					break;
 				case 't':
 					system("cls");
@@ -252,7 +252,6 @@ int main()
 			if(lives <= 0)					//die
 			{
 				cout<<"You died at level "<<level<<'.'<<endl;
-				getch();
 				cout<<"You finally realize that you can never get out of here."<<endl;
 				getch();
 				return 0;
