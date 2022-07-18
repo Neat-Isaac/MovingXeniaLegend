@@ -3,23 +3,24 @@
 #include <conio.h>						//get the keyboard value
 #include <fstream>						//read the map file
 #include <cmath>						//abs() function
-#include <ctime>
+#include <ctime>						//random
 using namespace std;
 
-const int xview = 2,yview = 1;
+const int xview = 2,yview = 1,XPOS = 12,YPOS = 6;
 int mpos[25][80];
 
 int main()
 {
 	string map[25],imap[25],pmap[25];				//map:game map;imap:background map;pmap:front map
-	int coin = 0,kill = 0,level = 1,lives = 5;		//if you do not understand that,you can not understand that
+	int coin = 0,kill = 0,level = 1,lives = 5,wk = 1;		//if you do not understand that,you can not understand that
 	int x,y;										//init the position
+	string weapon = "Fist";
 	srand(time(NULL));
 	
 	while(true)
 	{
 		int mlives = -1;;
-		x = 40;y = 12;
+		x = XPOS;y = YPOS;
 		system("setmap");
 		ifstream fin("map1.txt");			//file pointer
 		for(int i=0;i<25;i++)				//this loop read the map file
@@ -44,7 +45,7 @@ int main()
 			for(int j=0;j<80;j++)
 			{
 				if(map[i][j] == 'M')
-					mpos[i][j] = 5;
+					mpos[i][j] = rand() % 5 + level*3;
 			}
 		}
 		system("cls");
@@ -89,9 +90,9 @@ int main()
 								continue;
 							if(map[i][j] == 'M')
 							{
-								mpos[i][j]--;
+								mpos[i][j] -= wk;
 								mlives = mpos[i][j];
-								if(mpos[i][j] == 0)
+								if(mpos[i][j] <= 0)
 								{
 									map[i][j] = ' ';
 									kill++;
@@ -121,14 +122,25 @@ int main()
 					cout<<"===============Shop Menu==============="<<endl;
 					cout<<"Press number keys to shop."<<endl;
 					cout<<"1 Heart\t3 coins"<<endl;
+					cout<<"2 Stick\t10 coins"<<endl;
 					/*add other things here*/
 					char c = getch();
 					switch(c)
 					{
 						case '1':
-							coin -= 3;
-							lives++;
+							if(coin >= 3)
+							{
+								coin -= 3;
+								lives++;
+							}
 							break;
+						case '2':
+							if(coin >= 10)
+							{
+								coin -= 10;
+								weapon = "Stick";
+								wk = 3;
+							 } 
 					}
 			}
 			
@@ -257,9 +269,19 @@ int main()
 				return 0;
 			}
 											//print status
-			cout<<"x:"<<x<<"\ty:"<<y<<"\tcoin:"<<coin<<"\tkill:"<<kill<<"\tlives:"<<lives<<"\tlevel:"<<level<<"\tmonster's lives:"<<mlives<<endl;
+			cout<<"x:"<<x<<"\ty:"<<y<<"\tcoin:"<<coin<<"\tweapon:"<<weapon<<"\tkill:"<<kill<<"\tlives:"<<lives<<"\tlevel:"<<level<<"\tmonster's lives:"<<mlives<<endl;
 			for(int i=0;i<25;i++)			//print the map
 				cout<<pmap[i]<<endl;
+			/*{
+				for(int j=0;j<80;j++)
+				{
+					if(mpos[i][j] > 0)
+						cout<<mpos[i][j];
+					else
+						cout<<' ';
+				}
+				cout<<endl;
+			}*/
 		}
 		level++;							//(start this up a second time)
 	}

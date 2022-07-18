@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 using namespace std;
+const int XPOS = 12,YPOS = 6;
 int main()
 {
 	string map[25];
@@ -13,10 +14,10 @@ int main()
 	//rooms
 	int room[5][4];
 	int distance = 4;
-	room[0][0] = 32;
-	room[0][1] = 10;
-	room[0][2] = 47;
-	room[0][3] = 14;
+	room[0][0] = XPOS - 8;
+	room[0][1] = YPOS - 2;
+	room[0][2] = XPOS + 7;
+	room[0][3] = YPOS + 2;
 	for(int i=1;i<5;i++)
 	{
 		bool flag = true;
@@ -112,7 +113,7 @@ int main()
 	//cout<<"spaces:"<<space<<" coins:"<<coin<<" hearts:"<<heart<<" monsters:"<<monster<<endl;
 	//exit
 	map[room[4][1]+2][room[4][0]+7] = 'O';
-	map[12][40] = ' ';
+	map[YPOS][XPOS] = ' ';
 	
 	//write map
 	for(int i=0;i<25;i++)
