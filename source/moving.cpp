@@ -49,7 +49,7 @@ int main()
 			}
 		}
 		system("cls");
-		cout<<"Load successful!"<<endl<<"Press any key to enter the game.";
+		cout<<"Load successful!"<<endl<<"Press W,A,S or D key to enter the game.";
 		
 		while(true)
 		{
@@ -63,6 +63,7 @@ int main()
 						pmap[i][j] = '.';
 				}
 			}
+			char c;
 			switch(getch())					//control the player
 			{								//move
 				case 'w':
@@ -124,7 +125,7 @@ int main()
 					cout<<"1 Heart\t3 coins"<<endl;
 					cout<<"2 Stick\t10 coins"<<endl;
 					/*add other things here*/
-					char c = getch();
+					c = getch();
 					switch(c)
 					{
 						case '1':
@@ -142,6 +143,9 @@ int main()
 								wk = 3;
 							 } 
 					}
+					break;
+				default:
+					continue;
 			}
 			
 			if(map[y][x] != ' ')

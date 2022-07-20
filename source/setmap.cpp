@@ -113,8 +113,11 @@ int main()
 	//cout<<"spaces:"<<space<<" coins:"<<coin<<" hearts:"<<heart<<" monsters:"<<monster<<endl;
 	//exit
 	map[room[4][1]+2][room[4][0]+7] = 'O';
-	map[YPOS][XPOS] = ' ';
-	
+	for(int i=YPOS-1;i<=YPOS+1;i++)				//safe area
+	{
+		for(int j=XPOS-1;j<=XPOS+1;j++)
+			map[i][j] = ' ';
+	}
 	//write map
 	for(int i=0;i<25;i++)
 		fout<<map[i]<<endl;
