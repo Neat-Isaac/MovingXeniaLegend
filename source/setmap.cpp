@@ -88,11 +88,11 @@ int main()
 	{
 		for(int j=0;j<80;j++)
 		{
-			int temp = rand() % 45;
+			int temp = rand() % 60;
 			if(map[i][j] == ' ')
 			{
 				space++;
-				if((temp == 1 || temp == 2) && coin < 30)
+				if((temp == 1) && coin < 30)
 				{
 					map[i][j] = 'C';
 					coin++;
@@ -102,7 +102,7 @@ int main()
 					map[i][j] = 'H';
 					heart++;
 				}
-				else if((temp == 4 || temp == 5) && monster < 20)
+				else if(temp >= 4 && temp <= 8)
 				{
 					map[i][j] = 'M';
 					monster++;

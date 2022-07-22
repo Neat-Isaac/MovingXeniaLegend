@@ -6,20 +6,20 @@
 #include <ctime>						//random
 using namespace std;
 
-const int xview = 2,yview = 1,XPOS = 12,YPOS = 6;
+const int xview = 2,yview = 1,XPOS = 12,YPOS = 6,FULL = 20;
 int mpos[25][80];
 
 int main()
 {
-	string map[25],imap[25],pmap[25];				//map:game map;imap:background map;pmap:front map
-	int coin = 0,kill = 0,level = 1,lives = 5,wk = 1;		//if you do not understand that,you can not understand that
-	int x,y;										//init the position
+	string map[25],imap[25],pmap[25];											//map:game map;imap:background map;pmap:front map
+	int coin = 0,kill = 0,level = 1,lives = 5,wk = 1,wp = 1,power = FULL;		//if you do not understand that,you can not understand that
+	int x,y,counter1 = 0;														//init the position
 	string weapon = "Fist";
 	srand(time(NULL));
 	
 	while(true)
 	{
-		int mlives = -1;;
+		int mlives = -1;
 		x = XPOS;y = YPOS;
 		system("setmap");
 		ifstream fin("map1.txt");			//file pointer
@@ -67,40 +67,55 @@ int main()
 			switch(getch())					//control the player
 			{								//move
 				case 'w':
-					if(y > 0)
+					if(map[y-1][x] != '*')
 						y--;
+					else
+						continue;
 					break;
 				case 's':
-					if(y < 24)
+					if(map[y+1][x] != '*')
 						y++;
+					else
+						continue;
 					break;
 				case 'a':
-					if(x > 0)
+					if(map[y][x-1] != '*')
 						x--;
+					else
+						continue;
 					break;
 				case 'd':
-					if(x < 78)
+					if(map[y][x+1] != '*')
 						x++;
+					else
+						continue;
 					break;
 				case 'k':					//kill the monster
-					for(int i=y-1;i<=y+1;i++)
+					if(power>=wp)
 					{
-						for(int j=x-1;j<=x+1;j++)
+						power -= wp;
+						for(int i=y-1;i<=y+1;i++)
 						{
-							if(abs(y-i) == abs(x-j))
-								continue;
-							if(map[i][j] == 'M')
+							for(int j=x-1;j<=x+1;j++)
 							{
-								mpos[i][j] -= wk;
-								mlives = mpos[i][j];
-								if(mpos[i][j] <= 0)
+								if(abs(y-i) == abs(x-j))
+									continue;
+								if(map[i][j] == 'M')
 								{
-									map[i][j] = ' ';
-									kill++;
+									mpos[i][j] -= wk;
+									mlives = mpos[i][j];
+									if(mpos[i][j] <= 0)
+									{
+										map[i][j] = ' ';
+										kill++;
+										coin++;
+									}
 								}
 							}
 						}
 					}
+					else
+						continue;
 					break;
 				case 'h':					//help menu
 					system("cls");
@@ -122,8 +137,9 @@ int main()
 					system("cls");
 					cout<<"===============Shop Menu==============="<<endl;
 					cout<<"Press number keys to shop."<<endl;
-					cout<<"1 Heart\t3 coins"<<endl;
-					cout<<"2 Stick\t10 coins"<<endl;
+					cout<<"1 Heart\t\t3 coins"<<endl;
+					cout<<"2 Stick\t\t10 coins"<<endl;
+					cout<<"3 Energy Drink\t5 coins"<<endl;
 					/*add other things here*/
 					c = getch();
 					switch(c)
@@ -141,7 +157,14 @@ int main()
 								coin -= 10;
 								weapon = "Stick";
 								wk = 3;
-							 } 
+								wp = 2;
+							}
+						case '3':
+							if(coin >= 5)
+							{
+								coin -= 5;
+								power += 50;
+							}
 					}
 					break;
 				default:
@@ -273,7 +296,7 @@ int main()
 				return 0;
 			}
 											//print status
-			cout<<"x:"<<x<<"\ty:"<<y<<"\tcoin:"<<coin<<"\tweapon:"<<weapon<<"\tkill:"<<kill<<"\tlives:"<<lives<<"\tlevel:"<<level<<"\tmonster's lives:"<<mlives<<endl;
+			cout<<"x:"<<x<<" y:"<<y<<"\tlives:"<<lives<<" energy:"<<power<<"\tweapon:"<<weapon<<" coin:"<<coin<<" kill:"<<kill<<" monster's lives:"<<mlives<<" level:"<<level<<endl;
 			for(int i=0;i<25;i++)			//print the map
 				cout<<pmap[i]<<endl;
 			/*{
@@ -286,6 +309,12 @@ int main()
 				}
 				cout<<endl;
 			}*/
+			if(counter1 >= 5 && power < FULL)
+			{
+				power++;
+				counter1 -= 5;
+			}
+			counter1++;
 		}
 		level++;							//(start this up a second time)
 	}
