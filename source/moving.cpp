@@ -140,6 +140,7 @@ int main()
 					cout<<"1 Heart\t\t3 coins"<<endl;
 					cout<<"2 Stick\t\t10 coins"<<endl;
 					cout<<"3 Energy Drink\t5 coins"<<endl;
+					cout<<"4 Knife\t\t20 coins"<<endl;
 					/*add other things here*/
 					c = getch();
 					switch(c)
@@ -159,14 +160,24 @@ int main()
 								wk = 3;
 								wp = 2;
 							}
+							break;
 						case '3':
 							if(coin >= 5)
 							{
 								coin -= 5;
 								power += 50;
 							}
+							break;
+						case '4':
+							if(coin >= 20)
+							{
+								coin -= 20;
+								weapon = "Knife";
+								wk = 8;
+								wp = 3;
+							}
+							break;
 					}
-					break;
 				default:
 					continue;
 			}
