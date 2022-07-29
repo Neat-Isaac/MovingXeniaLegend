@@ -5,24 +5,23 @@
 #include <cmath>						//abs() function
 #include <ctime>						//random
 using namespace std;
-
-const int xview = 2,yview = 1,XPOS = 12,YPOS = 6,FULL = 20;
 int mpos[25][80];
-
+const int FULL = 20,XPOS = 12,YPOS = 6,xview = 2,yview = 1;
 int main()
 {
-	string map[25],imap[25],pmap[25];											//map:game map;imap:background map;pmap:front map
-	int coin = 0,kill = 0,level = 1,lives = 5,wk = 1,wp = 1,power = FULL;		//if you do not understand that,you can not understand that
-	int x,y,counter1 = 0;														//init the position
+	string map[25],imap[25],pmap[25];										//map:game map;imap:background map;pmap:front map
+	int coin = 0,kill = 0,level = 1,lives = 5,wk = 1,wp = 1,power = FULL;	//if you do not understand that,you can not understand that
+	int x,y,dx,dy,counter1 = 0;												//init the position
 	string weapon = "Fist";
 	srand(time(NULL));
 	
 	while(true)
 	{
-		int mlives = -1;
+		int mlives = -1,dlives = 15 + level * 20;
+		bool dIsAlive = true;
 		x = XPOS;y = YPOS;
 		system("setmap");
-		ifstream fin("map1.txt");			//file pointer
+		ifstream fin("map1.txt");			//file
 		for(int i=0;i<25;i++)				//this loop read the map file
 		{
 			getline(fin,map[i]);			//put a line in the array:map
@@ -55,6 +54,7 @@ int main()
 		{
 			map[y][x] = imap[y][x];			//clear the place before moving
 			int tempx = x,tempy = y;		//memorize the place
+			int newdx,newdy;
 			for(int i=y-yview;i<=y+yview;i++)
 			{
 				for(int j=x-xview;j<=x+xview;j++)
@@ -111,6 +111,11 @@ int main()
 										coin++;
 									}
 								}
+								else if(map[i][j] == 'D')
+								{
+									dlives -= wk;
+								}
+								
 							}
 						}
 					}
@@ -178,11 +183,12 @@ int main()
 							}
 							break;
 					}
+					break;
 				default:
 					continue;
 			}
 			
-			if(map[y][x] != ' ')
+			if(map[y][x] != ' ' && map[y][x] != '`')
 			{
 				if(map[y][x] == 'C')		//collect coins
 				{
@@ -196,11 +202,19 @@ int main()
 				}
 				else if(map[y][x] == 'O')	//win the game
 				{
-					system("cls");
-					cout<<"You win."<<endl;
-					cout<<"Press any key to enter the next level."<<endl;
-					getch();
-					break;
+					if(dlives <= 0)
+					{
+						system("cls");
+						cout<<"You win."<<endl;
+						cout<<"Press any key to enter the next level."<<endl;
+						getch();
+						break;
+					}
+					else
+					{
+						x = tempx;
+						y = tempy;
+					}
 				}
 				else{
 					if(map[y][x] == 'M')	//meet the monster
@@ -225,8 +239,20 @@ int main()
 						}
 					}
 				}
+			}/*
+			int newdx = rand() % 3 + dx-1;
+			int newdy = rand() % 3 + dy-1;
+			if(dlives<=0)
+				dIsAlive = false;
+			if(map[newdx][newdy] != '*' && map[newdx][newdy] != '@' && map[newdx][newdy] != 'M')
+			{
+				dx = newdx;
+				dy = newdy;
 			}
-			
+			else if(map[newdx][newdy] == '@')
+				lives--;
+			if(dIsAlive)
+				map[dy][dx] = 'D';*/
 			//monsters' move
 			for(int i=0;i<25;i++)
 			{
@@ -238,7 +264,7 @@ int main()
 						switch(temp)
 						{
 							case 0:
-								if(map[i+1][j] != '*' && map[i+1][j] != '@' && map[i+1][j] != 'M')
+								if(map[i+1][j] != '*' && map[i+1][j] != '@' && map[i+1][j] != 'M' && map[i+1][j] != 'D' && map[i+1][j] != 'O')
 								{
 									mpos[i+1][j] = mpos[i][j];
 									mpos[i][j] = 0;
@@ -250,7 +276,7 @@ int main()
 									break;
 								}
 							case 1:
-								if(map[i-1][j] != '*' && map[i-1][j] != '@' && map[i-1][j] != 'M')
+								if(map[i-1][j] == ' ')
 								{
 									mpos[i-1][j] = mpos[i][j];
 									mpos[i][j] = 0;
@@ -262,7 +288,7 @@ int main()
 									break;
 								}
 							case 2:
-								if(map[i][j+1] != '*' && map[i][j+1] != '@' && map[i][j+1] != 'M')
+								if(map[i][j+1] == ' ')
 								{
 									mpos[i][j+1] = mpos[i][j];
 									mpos[i][j] = 0;
@@ -274,7 +300,7 @@ int main()
 									break;
 								}
 							case 3:
-								if(map[i][j-1] != '*' && map[i][j-1] != '@' && map[i][j-1] != 'M')
+								if(map[i][j-1] == ' ')
 								{
 									mpos[i][j-1] = mpos[i][j];
 									mpos[i][j] = 0;
@@ -287,9 +313,46 @@ int main()
 								}
 						}
 					}
+					else if(map[i][j] == 'D')
+					{
+						if(imap[i][j] == 'D')
+							map[i][j] = '`';
+						else
+							map[i][j] = imap[i][j];
+						newdx = j;newdy = i;
+						if(dlives>0)
+						{
+							newdx = rand() % 3 + j-1;
+							if(newdx == j)
+								newdy = rand() % 3 + i-1;
+							if(newdx>1 && newdx<79 && newdy>1 && newdy<24)
+							{
+								if(map[newdy][newdx] == '`' || map[newdy][newdx] == 'D')
+								{
+									map[newdy][newdx] = 'D';
+								}
+								else if(map[newdy][newdx] == '@')
+								{
+									lives--;
+									newdx = j;newdy = i;
+									map[newdy][newdx] = 'D';
+								}
+								else if(map[newdy][newdx] == '*' || map[newdy][newdx] == 'O')
+								{
+									newdx = j;newdy = i;
+									map[newdy][newdx] = 'D';
+								}
+							}
+						}
+						else
+						{
+							coin+=50;
+							lives += 5;
+						}
+						
+					}
 				}
 			}
-			
 			for(int i=y-yview;i<=y+yview;i++)
 			{
 				for(int j=x-xview;j<=x+xview;j++)
@@ -310,16 +373,6 @@ int main()
 			cout<<"x:"<<x<<" y:"<<y<<"\tlives:"<<lives<<" energy:"<<power<<"\tweapon:"<<weapon<<" coin:"<<coin<<" kill:"<<kill<<" monster's lives:"<<mlives<<" level:"<<level<<endl;
 			for(int i=0;i<25;i++)			//print the map
 				cout<<pmap[i]<<endl;
-			/*{
-				for(int j=0;j<80;j++)
-				{
-					if(mpos[i][j] > 0)
-						cout<<mpos[i][j];
-					else
-						cout<<' ';
-				}
-				cout<<endl;
-			}*/
 			if(counter1 >= 5 && power < FULL)
 			{
 				power++;
