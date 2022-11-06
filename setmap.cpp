@@ -112,13 +112,7 @@ int main()
 	}
 	//cout<<"spaces:"<<space<<" coins:"<<coin<<" hearts:"<<heart<<" monsters:"<<monster<<endl;
 	//exit
-	for(int j=room[4][0];j<=room[4][2];j++)
-	{
-		for(int k=room[4][1];k<=room[4][3];k++)
-			map[k][j] = '`';
-	}
 	map[room[4][1]+2][room[4][0]+7] = 'O';
-	map[room[4][1]+2][room[4][0]+5] = 'D';
 	for(int i=YPOS-1;i<=YPOS+1;i++)				//safe area
 	{
 		for(int j=XPOS-1;j<=XPOS+1;j++)
