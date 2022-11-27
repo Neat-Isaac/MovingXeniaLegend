@@ -41,7 +41,7 @@ int main()
 			}
 		}	
 		system("cls");
-		cout<<"Load successful!Press W,A,S or D key to enter the game."<<endl;
+		cout<<"Loading succeeded!Press W,A,S or D key to enter the game."<<endl;
 		for(int i=y-yview;i<=y+yview;i++)
 		{
 			for(int j=x-xview;j<=x+xview;j++)
